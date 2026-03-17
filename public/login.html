@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Bugiboni Entrepreneurs - Login</title>
+    
+    <!-- PWA Meta Tags -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2E7D32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Bugiboni Login">
+    <meta name="description" content="Login to Bugiboni Young Entrepreneurs Savings Management System">
+    
+    <!-- Apple Touch Icons -->
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Preload critical assets -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="js/auth.js" as="script">
+    
+    <style>
+        /* Login page specific styles */
+        .login-page {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-page::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-xl);
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-xl);
+            position: relative;
+            z-index: 1;
+            animation: slideUpFade 0.6s ease;
+        }
+        
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .logo-wrapper {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto var(--spacing-lg);
+            background: var(--primary-color);
+            border-radius: var(--radius-circle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-md);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(46, 125, 50, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0); }
+        }
+        
+        .logo {
+            width: 80px;
+            height: 80px;
+            border-radius: var(--radius-circle);
+            background: white;
+            padding: 5px;
+        }
+        
+        .login-header h1 {
+            font-size: 1.75rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+            font-weight: 700;
+        }
+        
+        .login-header p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+        
+        .login-form {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .form-group {
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            font-weight: 500;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            transition: color var(--transition-fast);
+        }
+        
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: var(--spacing-md);
+            color: var(--text-light);
+            font-size: 1.2rem;
+            z-index: 1;
+            transition: color var(--transition-fast);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px 14px 48px;
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            font-size: 1rem;
+            transition: all var(--transition-fast);
+            background: white;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px var(--primary-soft);
+        }
+        
+        .form-group input:focus + .input-icon {
+            color: var(--primary-color);
+        }
+        
+        .form-group input::placeholder {
+            color: var(--text-muted);
+            opacity: 0.7;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: var(--spacing-md);
+            background: none;
+            border: none;
+            color: var(--text-light);
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+        }
+        
+        .password-toggle:hover {
+            color: var(--primary-color);
+            background: var(--background);
+        }
+        
+        .forgot-password {
+            text-align: right;
+            margin-top: var(--spacing-xs);
+        }
+        
+        .forgot-password a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.85rem;
+            transition: color var(--transition-fast);
+        }
+        
+        .forgot-password a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+        
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--radius-lg);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+            margin-top: var(--spacing-lg);
+        }
+        
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: var(--radius-circle);
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .login-button:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        .login-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .login-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        
+        .login-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .login-button.loading {
+            color: transparent;
+            pointer-events: none;
+        }
+        
+        .login-button.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 3px solid white;
+            border-top-color: transparent;
+            border-radius: var(--radius-circle);
+            animation: button-spin 0.8s linear infinite;
+        }
+        
+        @keyframes button-spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            background: var(--danger-light);
+            color: var(--danger-dark);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin-top: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            border-left: 4px solid var(--danger-color);
+            animation: shake 0.5s ease;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+        
+        .error-icon {
+            font-size: 1.2rem;
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: var(--spacing-xl);
+            padding-top: var(--spacing-lg);
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .login-footer p {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin: var(--spacing-xs) 0;
+        }
+        
+        .login-footer .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            background: var(--primary-soft);
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-xl);
+            color: var(--primary-dark);
+            font-size: 0.8rem;
+            margin-top: var(--spacing-sm);
+        }
+        
+        .login-footer .security-badge span {
+            font-size: 1rem;
+        }
+        
+        .demo-credentials {
+            background: var(--background);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            font-size: 0.85rem;
+        }
+        
+        .demo-credentials p {
+            margin: var(--spacing-xs) 0;
+            color: var(--text-light);
+        }
+        
+        .demo-credentials strong {
+            color: var(--primary-color);
+        }
+        
+        .offline-indicator {
+            display: none;
+            position: fixed;
+            top: var(--spacing-md);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--warning-color);
+            color: var(--text-color);
+            padding: var(--spacing-xs) var(--spacing-md);
+            border-radius: var(--radius-xl);
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 1000;
+            box-shadow: var(--shadow-md);
+            animation: slideDown 0.3s ease;
+        }
+        
+        @keyframes slideDown {
+            from {
+                top: -50px;
+                opacity: 0;
+            }
+            to {
+                top: var(--spacing-md);
+                opacity: 1;
+            }
+        }
+        
+        .offline-indicator.visible {
+            display: block;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-md);
+        }
+        
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .remember-me label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="login-page">
+    <!-- Offline Indicator -->
+    <div id="offlineIndicator" class="offline-indicator">
+        ⚠️ You are offline - Login may not work
+    </div>
+
+    <!-- Main Login Container -->
+    <div class="login-container">
+        <!-- Header Section -->
+        <div class="login-header">
+            <div class="logo-wrapper">
+                <img src="icons/icon-192x192.png" alt="Bugiboni Logo" class="logo">
+            </div>
+            <h1>Bugiboni Young Entrepreneurs</h1>
+            <p>Savings Management System</p>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="login-form" autocomplete="off">
+            <!-- Username Field -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">👤</span>
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Enter your username"
+                        required 
+                        autocomplete="username"
+                        autocapitalize="none"
+                        spellcheck="false"
+                    >
+                </div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">🔒</span>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Enter your password"
+                        required 
+                        autocomplete="current-password"
+                    >
+                    <button 
+                        type="button" 
+                        class="password-toggle" 
+                        id="togglePassword"
+                        aria-label="Toggle password visibility"
+                    >
+                        👁️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Forgot Password Link -->
+            <div class="forgot-password">
+                <a href="#" id="forgotPassword">Forgot password?</a>
+            </div>
+
+            <!-- Remember Me Checkbox -->
+            <div class="remember-me">
+                <input type="checkbox" id="rememberMe" name="rememberMe">
+                <label for="rememberMe">Remember me on this device</label>
+            </div>
+
+            <!-- Login Button -->
+            <button type="submit" id="loginButton" class="login-button">
+                Login to Dashboard
+            </button>
+
+            <!-- Error Message Container -->
+            <div id="errorMessage" class="error-message" style="display: none;">
+                <span class="error-icon">⚠️</span>
+                <span id="errorText"></span>
+            </div>
+        </form>
+
+        <!-- Footer Section -->
+        <div class="login-footer">
+            <p>Secure system for members only</p>
+            <div class="security-badge">
+                <span>🔒</span>
+                <span>256-bit SSL Encrypted</span>
+            </div>
+            
+            <!-- Demo Credentials (Remove in production) -->
+            <div class="demo-credentials" id="demoCredentials">
+                <p><strong>Demo Credentials:</strong></p>
+                <p>Admin: admin / admin123</p>
+                <p>Chairperson: chairperson / chair123</p>
+                <p>Treasurer: treasurer / treas123</p>
+                <p>Member: member1 / member123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPasswordModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Reset Password</h3>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <p>Please contact your system administrator to reset your password:</p>
+                <div class="admin-contact">
+                    <p><strong>📞 Admin Phone:</strong> +256 700 000001</p>
+                    <p><strong>📧 Admin Email:</strong> admin@bugiboni.org</p>
+                </div>
+                <p class="text-muted">Or speak to your chairperson for assistance.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="closeModal()">Got it</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check for offline status
+        function updateOnlineStatus() {
+            const indicator = document.getElementById('offlineIndicator');
+            if (!navigator.onLine) {
+                indicator.classList.add('visible');
+            } else {
+                indicator.classList.remove('visible');
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus);
+        window.addEventListener('offline', updateOnlineStatus);
+        updateOnlineStatus();
+
+        // Password visibility toggle
+        document.getElementById('togglePassword').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.textContent = type === 'password' ? '👁️' : '👁️‍🗨️';
+        });
+
+        // Forgot password link
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('forgotPasswordModal').style.display = 'flex';
+        });
+
+        // Close modal function
+        window.closeModal = function() {
+            document.getElementById('forgotPasswordModal').style.display = 'none';
+        };
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('forgotPasswordModal');
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Login form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const loginButton = document.getElementById('loginButton');
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            
+            // Validate inputs
+            if (!username || !password) {
+                showError('Please enter both username and password');
+                return;
+            }
+            
+            // Show loading state
+            loginButton.classList.add('loading');
+            loginButton.disabled = true;
+            errorDiv.style.display = 'none';
+            
+            try {
+                // Check online status
+                if (!navigator.onLine) {
+                    throw new Error('You are offline. Please check your internet connection.');
+                }
+                
+                // Make login request
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Login failed');
+                }
+                
+                if (data.success) {
+                    // Store token
+                    if (rememberMe) {
+                        // Store with longer expiry (handled by token expiry)
+                        localStorage.setItem('token', data.token);
+                    } else {
+                        // Use sessionStorage for session-only
+                        sessionStorage.setItem('token', data.token);
+                    }
+                    
+                    // Store user data
+                    const userData = JSON.stringify(data.user);
+                    if (rememberMe) {
+                        localStorage.setItem('user', userData);
+                    } else {
+                        sessionStorage.setItem('user', userData);
+                    }
+                    
+                    // Store login timestamp
+                    localStorage.setItem('lastLogin', new Date().toISOString());
+                    
+                    // Show success message
+                    showSuccess('Login successful! Redirecting...');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html';
+                    }, 1000);
+                } else {
+                    throw new Error(data.error || 'Login failed');
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                showError(error.message || 'Network error. Please try again.');
+            } finally {
+                // Remove loading state
+                loginButton.classList.remove('loading');
+                loginButton.disabled = false;
+            }
+        });
+
+        // Helper function to show error
+        function showError(message) {
+            const errorDiv = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            errorText.textContent = message;
+            errorDiv.style.display = 'flex';
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                errorDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Helper function to show success
+        function showSuccess(message) {
+            // Create success message element
+            const successDiv = document.createElement('div');
+            successDiv.className = 'success-message';
+            successDiv.style.position = 'fixed';
+            successDiv.style.top = '20px';
+            successDiv.style.right = '20px';
+            successDiv.style.zIndex = '9999';
+            successDiv.innerHTML = `
+                <span style="font-size: 1.2rem; margin-right: 8px;">✅</span>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(successDiv);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+
+        // Check for existing session
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+            const user = localStorage.getItem('user') || sessionStorage.getItem('user');
+            
+            if (token && user) {
+                // Verify token is still valid (optional)
+                // Redirect to dashboard
+                window.location.href = '/dashboard.html';
+            }
+            
+            // Prefill username if remembered
+            const lastUsername = localStorage.getItem('lastUsername');
+            if (lastUsername) {
+                document.getElementById('username').value = lastUsername;
+            }
+        });
+
+        // Add keyboard shortcut (Ctrl+Enter) to submit
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                document.getElementById('loginForm').requestSubmit();
+            }
+        });
+
+        // Add input validation
+        document.getElementById('username').addEventListener('input', function(e) {
+            // Remove any special characters that might cause issues
+            this.value = this.value.replace(/[<>]/g, '');
+        });
+
+        // Prevent multiple rapid submissions
+        let submitting = false;
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            if (submitting) {
+                e.preventDefault();
+                return;
+            }
+            submitting = true;
+            setTimeout(() => { submitting = false; }, 2000);
+        });
+
+        // Demo credentials quick fill (for development - remove in production)
+        document.getElementById('demoCredentials').addEventListener('dblclick', function() {
+            // Quick fill admin credentials on double click
+            document.getElementById('username').value = 'admin';
+            document.getElementById('password').value = 'admin123';
+            document.getElementById('rememberMe').checked = true;
+        });
+
+        // Add animation to form fields
+        const formGroups = document.querySelectorAll('.form-group');
+        formGroups.forEach((group, index) => {
+            group.style.animation = `slideUpFade 0.6s ease ${index * 0.1 + 0.3}s both`;
+        });
+
+        // Session timeout warning (for future implementation)
+        let sessionTimeout;
+        function resetSessionTimeout() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                // Warn user about session expiry
+                console.log('Session will expire soon');
+            }, 7 * 60 * 60 * 1000); // 7 hours
+        }
+
+        // Add security headers check
+        if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost') {
+            console.warn('Application should be served over HTTPS for security');
+        }
+
+        // Prevent XSS in error messages
+        const escapeHtml = (unsafe) => {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
+        // Log login attempts for audit (can be sent to server)
+        function logLoginAttempt(username, success) {
+            const logEntry = {
+                timestamp: new Date().toISOString(),
+                username: username,
+                success: success,
+                userAgent: navigator.userAgent,
+                ip: 'client-side' // Server will capture real IP
+            };
+            console.log('Login attempt:', logEntry);
+            // Could send to analytics endpoint
+        }
+
+        // Add device fingerprinting (optional)
+        function getDeviceFingerprint() {
+            const screen = `${screen.width}x${screen.height}x${screen.colorDepth}`;
+            const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const language = navigator.language;
+            return { screen, timezone, language };
+        }
+    </script>
+    
+    <!-- Additional security script -->
+    <script>
+        // Prevent caching of login page
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        });
+        
+        // Clear sensitive data on page hide
+        window.addEventListener('pagehide', function() {
+            // Don't clear if remember me is checked
+            if (!document.getElementById('rememberMe').checked) {
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+            }
+        });
+        
+        // Disable right-click on password field (optional)
+        document.getElementById('password').addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+        });
+    </script>
+</body>
+</html>
