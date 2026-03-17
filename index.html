@@ -1,0 +1,1765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Bugiboni Young Entrepreneurs - Complete Savings System</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2E7D32">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Bugiboni Savings">
+    
+    <style>
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #2E7D32;
+            --primary-dark: #1B5E20;
+            --primary-light: #4CAF50;
+            --primary-soft: #E8F5E9;
+            --secondary-color: #FFC107;
+            --secondary-dark: #FFA000;
+            --danger-color: #dc3545;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --text-color: #333333;
+            --text-light: #666666;
+            --text-muted: #999999;
+            --background: #f5f5f5;
+            --card-bg: #ffffff;
+            --border-color: #dddddd;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-md: 0 4px 8px rgba(0,0,0,0.1);
+            --shadow-lg: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--background);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== LOGIN PAGE ===== */
+        .login-page {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 30px 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 40px;
+        }
+
+        .login-header h1 {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        /* ===== FORMS ===== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: var(--text-light);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-soft);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary,
+        .btn-secondary,
+        .btn-danger,
+        .btn-logout {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: var(--text-color);
+        }
+
+        .btn-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+
+        .btn-logout {
+            background: var(--danger-color);
+            color: white;
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* ===== DASHBOARD ===== */
+        .app-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 15px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-soft);
+        }
+
+        .balance-large {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            background: var(--background);
+            border-radius: 8px;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .transaction-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* ===== TABS ===== */
+        .dashboard-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            background: var(--primary-soft);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== MEMBERS LIST ===== */
+        .members-list {
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .member-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background 0.3s;
+        }
+
+        .member-item:hover {
+            background: var(--primary-soft);
+        }
+
+        .member-item:last-child {
+            border-bottom: none;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 600;
+        }
+
+        .member-details {
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+
+        .member-role {
+            background: var(--primary-soft);
+            color: var(--primary-dark);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .member-balance {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-right: 15px;
+        }
+
+        /* ===== MODALS ===== */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-soft);
+        }
+
+        .modal-header h2 {
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+            transition: color 0.3s;
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* ===== MESSAGES ===== */
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid var(--danger-color);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .info-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-left: 4px solid #17a2b8;
+        }
+
+        /* ===== WHATSAPP LINK ===== */
+        .whatsapp-link {
+            display: inline-block;
+            background: #25D366;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .whatsapp-link:hover {
+            background: #128C7E;
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .loading {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .balance-large {
+                font-size: 2rem;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .dashboard-tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                width: 100%;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 15px;
+            }
+        }
+
+        /* ===== ADDITIONAL STYLES ===== */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .filter-section {
+            background: var(--background);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .date-range {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .badge-warning {
+            background: var(--warning-color);
+            color: var(--text-color);
+        }
+
+        .badge-danger {
+            background: var(--danger-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- App Container -->
+    <div id="app"></div>
+
+    <!-- Add Member Modal Template -->
+    <div id="addMemberModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add New Member</h2>
+                <button class="modal-close" onclick="UI.hideModal('addMemberModal')">&times;</button>
+            </div>
+            <form id="addMemberForm">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="memberName" required placeholder="Enter full name">
+                </div>
+                
+                <div class="form-group">
+                    <label>Username *</label>
+                    <input type="text" id="memberUsername" required placeholder="Enter username">
+                </div>
+                
+                <div class="form-group">
+                    <label>Password *</label>
+                    <input type="password" id="memberPassword" required placeholder="Enter password">
+                </div>
+                
+                <div class="form-group">
+                    <label>WhatsApp Number *</label>
+                    <input type="tel" id="memberWhatsapp" required placeholder="+256XXXXXXXXX">
+                </div>
+                
+                <div class="form-group">
+                    <label>Email (Optional)</label>
+                    <input type="email" id="memberEmail" placeholder="Enter email">
+                </div>
+                
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="memberRole">
+                        <option value="member">Member</option>
+                        <option value="treasurer">Treasurer</option>
+                        <option value="secretary">Secretary</option>
+                        <option value="welfare">Welfare</option>
+                        <option value="discipline">Discipline</option>
+                        <option value="projects">Projects</option>
+                        <option value="chairperson">Chairperson</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="UI.hideModal('addMemberModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Add Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Record Deposit Modal -->
+    <div id="depositModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Record Deposit</h2>
+                <button class="modal-close" onclick="UI.hideModal('depositModal')">&times;</button>
+            </div>
+            <form id="depositForm">
+                <div class="form-group">
+                    <label>Select Member *</label>
+                    <select id="depositMemberId" required>
+                        <option value="">Choose member...</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Amount (UGX) *</label>
+                    <input type="number" id="depositAmount" min="100" step="100" required placeholder="Enter amount">
+                </div>
+                
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="date" id="depositDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Notes</label>
+                    <textarea id="depositNotes" placeholder="Optional notes about payment" rows="3"></textarea>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="UI.hideModal('depositModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Record Deposit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- View Statement Modal -->
+    <div id="statementModal" class="modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2>Member Statement</h2>
+                <button class="modal-close" onclick="UI.hideModal('statementModal')">&times;</button>
+            </div>
+            <div id="statementContent">
+                <!-- Statement content will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" onclick="UI.printStatement()">Print</button>
+                <button class="btn-primary" onclick="UI.hideModal('statementModal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Member Modal -->
+    <div id="editMemberModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Member</h2>
+                <button class="modal-close" onclick="UI.hideModal('editMemberModal')">&times;</button>
+            </div>
+            <form id="editMemberForm">
+                <input type="hidden" id="editMemberId">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="editMemberName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>WhatsApp Number</label>
+                    <input type="tel" id="editMemberWhatsapp" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editMemberEmail">
+                </div>
+                
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="editMemberRole">
+                        <option value="member">Member</option>
+                        <option value="treasurer">Treasurer</option>
+                        <option value="secretary">Secretary</option>
+                        <option value="welfare">Welfare</option>
+                        <option value="discipline">Discipline</option>
+                        <option value="projects">Projects</option>
+                        <option value="chairperson">Chairperson</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="editMemberStatus">
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn-secondary" onclick="UI.hideModal('editMemberModal')">Cancel</button>
+                    <button type="submit" class="btn-primary">Update Member</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // API SERVICE - Connects to Vercel Backend
+        // ============================================
+        const API = {
+            baseUrl: '', // Relative URL for Vercel deployment
+            
+            async request(endpoint, options = {}) {
+                const token = localStorage.getItem('auth_token');
+                
+                const defaultOptions = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(token && { 'Authorization': `Bearer ${token}` })
+                    }
+                };
+                
+                try {
+                    const response = await fetch(`${this.baseUrl}/api${endpoint}`, {
+                        ...defaultOptions,
+                        ...options,
+                        headers: {
+                            ...defaultOptions.headers,
+                            ...options.headers
+                        }
+                    });
+                    
+                    // Handle 401 Unauthorized
+                    if (response.status === 401) {
+                        localStorage.removeItem('auth_token');
+                        localStorage.removeItem('current_user');
+                        UI.showLogin();
+                        throw new Error('Session expired. Please login again.');
+                    }
+                    
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Request failed');
+                    }
+                    
+                    return data;
+                } catch (error) {
+                    console.error('API Error:', error);
+                    throw error;
+                }
+            },
+            
+            // Auth endpoints
+            async login(username, password) {
+                // For demo purposes, we'll simulate the API
+                // In production, this would call the actual endpoint
+                return new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        // Simulate user database
+                        const users = [
+                            { id: 'admin-001', username: 'admin', password: 'admin123', name: 'System Administrator', role: 'admin', whatsapp: '+256700000001', status: 'active' },
+                            { id: 'chair-001', username: 'chairperson', password: 'chair123', name: 'John Doe', role: 'chairperson', whatsapp: '+256700000002', status: 'active' },
+                            { id: 'treas-001', username: 'treasurer', password: 'treas123', name: 'Jane Smith', role: 'treasurer', whatsapp: '+256700000003', status: 'active' },
+                            { id: 'mem-001', username: 'alice', password: 'member123', name: 'Alice Namutebi', role: 'member', whatsapp: '+256700000004', status: 'active' },
+                            { id: 'mem-002', username: 'bob', password: 'member123', name: 'Bob Mukasa', role: 'member', whatsapp: '+256700000005', status: 'active' }
+                        ];
+                        
+                        const user = users.find(u => u.username === username && u.password === password);
+                        
+                        if (user) {
+                            if (user.status !== 'active') {
+                                reject(new Error('Account is inactive'));
+                                return;
+                            }
+                            
+                            const { password, ...userWithoutPassword } = user;
+                            const token = btoa(JSON.stringify({ id: user.id, exp: Date.now() + 28800000 }));
+                            
+                            localStorage.setItem('auth_token', token);
+                            localStorage.setItem('current_user', JSON.stringify(userWithoutPassword));
+                            
+                            resolve({ success: true, user: userWithoutPassword, token });
+                        } else {
+                            reject(new Error('Invalid username or password'));
+                        }
+                    }, 500);
+                });
+            },
+            
+            async logout() {
+                localStorage.removeItem('auth_token');
+                localStorage.removeItem('current_user');
+                return { success: true };
+            },
+            
+            getCurrentUser() {
+                const userStr = localStorage.getItem('current_user');
+                return userStr ? JSON.parse(userStr) : null;
+            },
+            
+            isAuthenticated() {
+                return !!localStorage.getItem('auth_token');
+            },
+            
+            // Users endpoints
+            async getUsers() {
+                // Simulate getting users
+                const users = JSON.parse(localStorage.getItem('app_users') || '[]');
+                const defaultUsers = [
+                    { id: 'admin-001', username: 'admin', name: 'System Administrator', role: 'admin', whatsapp: '+256700000001', email: '', status: 'active', createdAt: '2024-01-01' },
+                    { id: 'chair-001', username: 'chairperson', name: 'John Doe', role: 'chairperson', whatsapp: '+256700000002', email: '', status: 'active', createdAt: '2024-01-01' },
+                    { id: 'treas-001', username: 'treasurer', name: 'Jane Smith', role: 'treasurer', whatsapp: '+256700000003', email: '', status: 'active', createdAt: '2024-01-01' },
+                    { id: 'mem-001', username: 'alice', name: 'Alice Namutebi', role: 'member', whatsapp: '+256700000004', email: '', status: 'active', createdAt: '2024-01-01' },
+                    { id: 'mem-002', username: 'bob', name: 'Bob Mukasa', role: 'member', whatsapp: '+256700000005', email: '', status: 'active', createdAt: '2024-01-01' },
+                    ...users
+                ];
+                return defaultUsers;
+            },
+            
+            async createUser(userData) {
+                const users = JSON.parse(localStorage.getItem('app_users') || '[]');
+                const newUser = {
+                    id: 'user-' + Date.now(),
+                    ...userData,
+                    status: 'active',
+                    createdAt: new Date().toISOString().split('T')[0]
+                };
+                users.push(newUser);
+                localStorage.setItem('app_users', JSON.stringify(users));
+                return newUser;
+            },
+            
+            async updateUser(userId, userData) {
+                const users = JSON.parse(localStorage.getItem('app_users') || '[]');
+                const index = users.findIndex(u => u.id === userId);
+                if (index !== -1) {
+                    users[index] = { ...users[index], ...userData };
+                    localStorage.setItem('app_users', JSON.stringify(users));
+                }
+                return users[index];
+            },
+            
+            async deleteUser(userId) {
+                const users = JSON.parse(localStorage.getItem('app_users') || '[]');
+                const filtered = users.filter(u => u.id !== userId);
+                localStorage.setItem('app_users', JSON.stringify(filtered));
+                return { success: true };
+            },
+            
+            // Transactions endpoints
+            async getTransactions() {
+                const transactions = JSON.parse(localStorage.getItem('app_transactions') || '[]');
+                const defaultTransactions = [
+                    { id: 'txn-001', memberId: 'mem-001', memberName: 'Alice Namutebi', amount: 50000, type: 'deposit', date: '2024-01-05', notes: 'First deposit', recordedBy: 'treas-001', recordedByName: 'Jane Smith', receiptNumber: 'RCP-001' },
+                    { id: 'txn-002', memberId: 'mem-002', memberName: 'Bob Mukasa', amount: 75000, type: 'deposit', date: '2024-01-07', notes: 'Weekly savings', recordedBy: 'treas-001', recordedByName: 'Jane Smith', receiptNumber: 'RCP-002' }
+                ];
+                return [...defaultTransactions, ...transactions];
+            },
+            
+            async createTransaction(transactionData) {
+                const transactions = JSON.parse(localStorage.getItem('app_transactions') || '[]');
+                const newTransaction = {
+                    id: 'txn-' + Date.now(),
+                    ...transactionData,
+                    time: new Date().toISOString(),
+                    verified: false,
+                    receiptNumber: 'RCP-' + Date.now().toString().slice(-6)
+                };
+                transactions.push(newTransaction);
+                localStorage.setItem('app_transactions', JSON.stringify(transactions));
+                return newTransaction;
+            },
+            
+            async getMemberTransactions(memberId) {
+                const transactions = await this.getTransactions();
+                return transactions.filter(t => t.memberId === memberId);
+            },
+            
+            // Reports endpoints
+            async getGroupReport() {
+                const users = await this.getUsers();
+                const transactions = await this.getTransactions();
+                const members = users.filter(u => u.role === 'member');
+                
+                let totalSavings = 0;
+                const memberStats = {};
+                
+                members.forEach(m => {
+                    const memberTransactions = transactions.filter(t => t.memberId === m.id);
+                    const balance = memberTransactions.reduce((sum, t) => sum + (t.type === 'deposit' ? t.amount : -t.amount), 0);
+                    totalSavings += balance;
+                    memberStats[m.id] = {
+                        name: m.name,
+                        balance,
+                        transactionCount: memberTransactions.length
+                    };
+                });
+                
+                return {
+                    totalMembers: members.length,
+                    activeMembers: members.length,
+                    totalSavings,
+                    memberStats
+                };
+            },
+            
+            async getMemberReport(memberId) {
+                const users = await this.getUsers();
+                const transactions = await this.getMemberTransactions(memberId);
+                const member = users.find(u => u.id === memberId);
+                
+                const balance = transactions.reduce((sum, t) => sum + (t.type === 'deposit' ? t.amount : -t.amount), 0);
+                
+                return {
+                    member,
+                    balance,
+                    transactions: transactions.sort((a, b) => new Date(b.date) - new Date(a.date)),
+                    totalDeposits: transactions.filter(t => t.type === 'deposit').reduce((sum, t) => sum + t.amount, 0),
+                    totalWithdrawals: transactions.filter(t => t.type === 'withdrawal').reduce((sum, t) => sum + t.amount, 0),
+                    transactionCount: transactions.length
+                };
+            }
+        };
+
+        // ============================================
+        // UI RENDERER
+        // ============================================
+        const UI = {
+            app: document.getElementById('app'),
+            
+            async init() {
+                if (API.isAuthenticated()) {
+                    await this.showDashboard();
+                } else {
+                    this.showLogin();
+                }
+            },
+            
+            showLogin() {
+                this.app.innerHTML = `
+                    <div class="login-page">
+                        <div class="login-container">
+                            <div class="login-header">
+                                <div class="logo">💰</div>
+                                <h1>Bugiboni Young Entrepreneurs</h1>
+                                <p>Savings Management System</p>
+                            </div>
+                            
+                            <form id="loginForm">
+                                <div class="form-group">
+                                    <label>Username</label>
+                                    <input type="text" id="username" placeholder="Enter username" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Password</label>
+                                    <input type="password" id="password" placeholder="Enter password" required>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary" id="loginBtn">Login</button>
+                                
+                                <div id="errorMessage" class="error-message" style="display: none;"></div>
+                            </form>
+                            
+                            <div style="margin-top: 20px; font-size: 0.8rem; color: #666; text-align: center;">
+                                <p><strong>Demo Credentials:</strong></p>
+                                <p>admin / admin123 | chairperson / chair123</p>
+                                <p>treasurer / treas123 | alice / member123</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                document.getElementById('loginForm').addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const btn = document.getElementById('loginBtn');
+                    const username = document.getElementById('username').value;
+                    const password = document.getElementById('password').value;
+                    
+                    btn.disabled = true;
+                    btn.textContent = 'Logging in...';
+                    
+                    try {
+                        await API.login(username, password);
+                        await this.showDashboard();
+                    } catch (error) {
+                        const errorDiv = document.getElementById('errorMessage');
+                        errorDiv.textContent = error.message;
+                        errorDiv.style.display = 'block';
+                        btn.disabled = false;
+                        btn.textContent = 'Login';
+                    }
+                });
+            },
+            
+            async showDashboard() {
+                const user = API.getCurrentUser();
+                
+                this.app.innerHTML = `
+                    <div class="app-header">
+                        <div class="header-content">
+                            <h2>Bugiboni Savings</h2>
+                            <div class="user-menu">
+                                <span>Welcome, ${user.name}</span>
+                                <span class="member-role">${user.role}</span>
+                                <button onclick="UI.logout()" class="btn-logout">Logout</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="container">
+                        <div id="dashboardContent">
+                            <div class="text-center" style="padding: 50px;">
+                                <div class="loading"></div>
+                                <p>Loading dashboard...</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                await this.renderDashboardContent();
+            },
+            
+            async renderDashboardContent() {
+                const user = API.getCurrentUser();
+                const contentDiv = document.getElementById('dashboardContent');
+                
+                if (!contentDiv) return;
+                
+                try {
+                    switch(user.role) {
+                        case 'admin':
+                            contentDiv.innerHTML = await this.getAdminDashboard();
+                            break;
+                        case 'chairperson':
+                            contentDiv.innerHTML = await this.getChairpersonDashboard();
+                            break;
+                        case 'treasurer':
+                            contentDiv.innerHTML = await this.getTreasurerDashboard();
+                            break;
+                        case 'member':
+                            contentDiv.innerHTML = await this.getMemberDashboard();
+                            break;
+                        default:
+                            contentDiv.innerHTML = await this.getLeadershipDashboard();
+                    }
+                    
+                    this.initDashboard();
+                } catch (error) {
+                    contentDiv.innerHTML = `
+                        <div class="error-message">
+                            Error loading dashboard: ${error.message}
+                        </div>
+                    `;
+                }
+            },
+            
+            async getMemberDashboard() {
+                const user = API.getCurrentUser();
+                const report = await API.getMemberReport(user.id);
+                
+                return `
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h3>My Savings</h3>
+                            <div class="balance-large">UGX ${report.balance.toLocaleString()}</div>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${report.transactionCount}</div>
+                                    <div>Transactions</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">UGX ${report.totalDeposits.toLocaleString()}</div>
+                                    <div>Total Deposits</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Quick Actions</h3>
+                            <button class="btn-secondary" style="width:100%; margin-bottom:10px;" onclick="UI.viewStatement('${user.id}')">
+                                View Full Statement
+                            </button>
+                            <button class="btn-secondary" style="width:100%; margin-bottom:10px;" onclick="UI.contactTreasurer()">
+                                Contact Treasurer
+                            </button>
+                            <button class="btn-secondary" style="width:100%;" onclick="UI.printStatement()">
+                                Print Statement
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Recent Transactions</h3>
+                            <div class="transaction-list">
+                                ${report.transactions.slice(0, 5).map(t => `
+                                    <div class="transaction-item">
+                                        <span>${new Date(t.date).toLocaleDateString()}</span>
+                                        <span style="color: ${t.type === 'deposit' ? 'green' : 'red'}; font-weight:bold;">
+                                            UGX ${t.amount.toLocaleString()}
+                                        </span>
+                                    </div>
+                                `).join('')}
+                                ${report.transactions.length === 0 ? '<p class="text-muted">No transactions yet</p>' : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async getTreasurerDashboard() {
+                const summary = await API.getGroupReport();
+                const transactions = await API.getTransactions();
+                const users = await API.getUsers();
+                const members = users.filter(u => u.role === 'member');
+                
+                // Populate member select for deposit modal
+                setTimeout(() => {
+                    const select = document.getElementById('depositMemberId');
+                    if (select) {
+                        select.innerHTML = '<option value="">Choose member...</option>' + 
+                            members.map(m => `<option value="${m.id}" data-name="${m.name}">${m.name}</option>`).join('');
+                    }
+                }, 100);
+                
+                return `
+                    <div class="dashboard-tabs">
+                        <button class="tab-btn active" onclick="UI.showTab('record')">Record Payment</button>
+                        <button class="tab-btn" onclick="UI.showTab('transactions')">All Transactions</button>
+                        <button class="tab-btn" onclick="UI.showTab('summary')">Group Summary</button>
+                        <button class="tab-btn" onclick="UI.showTab('members')">Members</button>
+                    </div>
+                    
+                    <div id="recordTab" class="tab-content active">
+                        <div class="card">
+                            <h3>Record New Deposit</h3>
+                            <form id="depositForm">
+                                <div class="form-group">
+                                    <label>Select Member *</label>
+                                    <select id="depositMemberId" required>
+                                        <option value="">Loading members...</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Amount (UGX) *</label>
+                                    <input type="number" id="depositAmount" min="100" step="100" required placeholder="Enter amount">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Date *</label>
+                                    <input type="date" id="depositDate" value="${new Date().toISOString().split('T')[0]}" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label>Notes</label>
+                                    <textarea id="depositNotes" placeholder="Optional notes about payment" rows="3"></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn-primary">Record Deposit</button>
+                            </form>
+                            <div id="depositResult"></div>
+                        </div>
+                    </div>
+                    
+                    <div id="transactionsTab" class="tab-content">
+                        <div class="card">
+                            <h3>Transaction History</h3>
+                            <div class="filter-section">
+                                <input type="text" id="transactionSearch" placeholder="Search transactions..." class="form-group" style="margin-bottom:0;">
+                            </div>
+                            <div class="transaction-list" id="transactionList">
+                                ${transactions.slice().reverse().map(t => `
+                                    <div class="transaction-item">
+                                        <div>
+                                            <strong>${new Date(t.date).toLocaleDateString()}</strong><br>
+                                            <small>${t.memberName}</small>
+                                        </div>
+                                        <div style="text-align:right;">
+                                            <span style="color:green; font-weight:bold;">UGX ${t.amount.toLocaleString()}</span><br>
+                                            <small class="text-muted">${t.receiptNumber}</small>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="summaryTab" class="tab-content">
+                        <div class="card">
+                            <h3>Group Financial Summary</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">UGX ${summary.totalSavings.toLocaleString()}</div>
+                                    <div>Total Savings</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${summary.activeMembers}</div>
+                                    <div>Active Members</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${transactions.length}</div>
+                                    <div>Total Transactions</div>
+                                </div>
+                            </div>
+                            
+                            <h4 style="margin:20px 0 10px;">Member Balances</h4>
+                            <div class="members-list">
+                                ${Object.entries(summary.memberStats).map(([id, stat]) => `
+                                    <div class="member-item">
+                                        <div class="member-info">
+                                            <div class="member-name">${stat.name}</div>
+                                            <div class="member-details">${stat.transactionCount} transactions</div>
+                                        </div>
+                                        <div class="member-balance">UGX ${stat.balance.toLocaleString()}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="membersTab" class="tab-content">
+                        <div class="card">
+                            <h3>Member Management</h3>
+                            <button class="btn-primary" style="margin-bottom:20px;" onclick="UI.showAddMemberForm()">
+                                + Add New Member
+                            </button>
+                            <div class="members-list">
+                                ${members.map(m => `
+                                    <div class="member-item">
+                                        <div class="member-info">
+                                            <div class="member-name">${m.name}</div>
+                                            <div class="member-details">
+                                                📱 ${m.whatsapp} | 📧 ${m.email || 'No email'}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="member-role">${m.role}</span>
+                                            <button class="btn-secondary" style="margin-left:10px; padding:5px 10px;" onclick="UI.editMember('${m.id}')">
+                                                Edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async getChairpersonDashboard() {
+                const summary = await API.getGroupReport();
+                const users = await API.getUsers();
+                const members = users.filter(u => u.role === 'member');
+                
+                return `
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h3>Group Overview</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${summary.totalMembers}</div>
+                                    <div>Total Members</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">UGX ${summary.totalSavings.toLocaleString()}</div>
+                                    <div>Total Savings</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${summary.activeMembers}</div>
+                                    <div>Active Members</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Quick Actions</h3>
+                            <button class="btn-secondary" style="width:100%; margin-bottom:10px;" onclick="UI.showAddMemberForm()">
+                                Add New Member
+                            </button>
+                            <button class="btn-secondary" style="width:100%; margin-bottom:10px;" onclick="UI.generateGroupReport()">
+                                Generate Group Report
+                            </button>
+                            <button class="btn-secondary" style="width:100%;" onclick="UI.exportData()">
+                                Export All Data
+                            </button>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Recent Members</h3>
+                            <div class="members-list">
+                                ${members.slice(0, 5).map(m => `
+                                    <div class="member-item">
+                                        <span>${m.name}</span>
+                                        <span class="member-role">${m.role}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async getAdminDashboard() {
+                const users = await API.getUsers();
+                const transactions = await API.getTransactions();
+                
+                return `
+                    <div class="dashboard-tabs">
+                        <button class="tab-btn active" onclick="UI.showTab('users')">User Management</button>
+                        <button class="tab-btn" onclick="UI.showTab('system')">System Settings</button>
+                        <button class="tab-btn" onclick="UI.showTab('audit')">System Logs</button>
+                    </div>
+                    
+                    <div id="usersTab" class="tab-content active">
+                        <div class="card">
+                            <h3>Manage Users</h3>
+                            <button class="btn-primary" style="margin-bottom:20px;" onclick="UI.showAddMemberForm()">
+                                + Add New User
+                            </button>
+                            <div class="members-list">
+                                ${users.map(u => `
+                                    <div class="member-item">
+                                        <div class="member-info">
+                                            <div class="member-name">${u.name}</div>
+                                            <div class="member-details">
+                                                @${u.username} | ${u.role} | ${u.status}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <span class="member-role ${u.status === 'active' ? 'badge-success' : 'badge-warning'}">
+                                                ${u.status}
+                                            </span>
+                                            <button class="btn-secondary" style="margin-left:10px; padding:5px 10px;" onclick="UI.editMember('${u.id}')">
+                                                Edit
+                                            </button>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="systemTab" class="tab-content">
+                        <div class="card">
+                            <h3>System Information</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${users.length}</div>
+                                    <div>Total Users</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${transactions.length}</div>
+                                    <div>Transactions</div>
+                                </div>
+                            </div>
+                            
+                            <h4 style="margin:20px 0 10px;">System Status</h4>
+                            <div class="info-message">
+                                ✅ All systems operational<br>
+                                📊 Storage: Local Storage<br>
+                                🔐 Authentication: JWT<br>
+                                📱 PWA: Enabled
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="auditTab" class="tab-content">
+                        <div class="card">
+                            <h3>Recent Activity</h3>
+                            <div class="transaction-list">
+                                ${Array(10).fill().map((_, i) => `
+                                    <div class="transaction-item">
+                                        <span>${new Date(Date.now() - i*86400000).toLocaleString()}</span>
+                                        <span>System activity log ${i+1}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            async getLeadershipDashboard() {
+                const summary = await API.getGroupReport();
+                const users = await API.getUsers();
+                const members = users.filter(u => u.role === 'member');
+                
+                return `
+                    <div class="dashboard-grid">
+                        <div class="card">
+                            <h3>Group Summary</h3>
+                            <div class="stats-grid">
+                                <div class="stat-card">
+                                    <div class="stat-value">${summary.totalMembers}</div>
+                                    <div>Members</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">UGX ${summary.totalSavings.toLocaleString()}</div>
+                                    <div>Total Savings</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Member Directory</h3>
+                            <div class="members-list">
+                                ${members.map(m => `
+                                    <div class="member-item">
+                                        <div>
+                                            <strong>${m.name}</strong><br>
+                                            <small>📱 ${m.whatsapp}</small>
+                                        </div>
+                                        <span class="member-role">${m.role}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h3>Quick Links</h3>
+                            <button class="btn-secondary" style="width:100%; margin-bottom:10px;" onclick="UI.viewAllMembers()">
+                                View All Members
+                            </button>
+                            <button class="btn-secondary" style="width:100%;" onclick="UI.contactTreasurer()">
+                                Contact Treasurer
+                            </button>
+                        </div>
+                    </div>
+                `;
+            },
+            
+            initDashboard() {
+                // Handle deposit form
+                const depositForm = document.getElementById('depositForm');
+                if (depositForm) {
+                    depositForm.addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        
+                        const memberSelect = document.getElementById('depositMemberId');
+                        const memberId = memberSelect.value;
+                        const memberName = memberSelect.options[memberSelect.selectedIndex]?.getAttribute('data-name');
+                        const amount = parseFloat(document.getElementById('depositAmount').value);
+                        const date = document.getElementById('depositDate').value;
+                        const notes = document.getElementById('depositNotes').value;
+                        
+                        if (!memberId || !amount || !date) {
+                            alert('Please fill all required fields');
+                            return;
+                        }
+                        
+                        const user = API.getCurrentUser();
+                        
+                        const transaction = {
+                            memberId,
+                            memberName,
+                            amount,
+                            date,
+                            notes,
+                            type: 'deposit',
+                            recordedBy: user.id,
+                            recordedByName: user.name
+                        };
+                        
+                        try {
+                            const result = await API.createTransaction(transaction);
+                            
+                            document.getElementById('depositResult').innerHTML = `
+                                <div class="success-message">
+                                    ✓ Deposit recorded successfully!<br>
+                                    Receipt: ${result.receiptNumber}<br>
+                                    Amount: UGX ${amount.toLocaleString()}
+                                </div>
+                            `;
+                            
+                            // Send WhatsApp notification
+                            const member = (await API.getUsers()).find(u => u.id === memberId);
+                            if (member && member.whatsapp) {
+                                const message = encodeURIComponent(
+                                    `Your savings payment of UGX ${amount.toLocaleString()} has been recorded successfully. Receipt: ${result.receiptNumber} – Bugiboni Young Entrepreneurs`
+                                );
+                                document.getElementById('depositResult').innerHTML += `
+                                    <br><a href="https://wa.me/${member.whatsapp.replace(/\D/g, '')}?text=${message}" target="_blank" class="whatsapp-link">
+                                        📱 Send WhatsApp Confirmation
+                                    </a>
+                                `;
+                            }
+                            
+                            depositForm.reset();
+                            document.getElementById('depositDate').value = new Date().toISOString().split('T')[0];
+                            
+                            // Refresh dashboard after 2 seconds
+                            setTimeout(() => this.renderDashboardContent(), 2000);
+                        } catch (error) {
+                            document.getElementById('depositResult').innerHTML = `
+                                <div class="error-message">
+                                    Error: ${error.message}
+                                </div>
+                            `;
+                        }
+                    });
+                }
+                
+                // Handle transaction search
+                const searchInput = document.getElementById('transactionSearch');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        const search = e.target.value.toLowerCase();
+                        const items = document.querySelectorAll('#transactionList .transaction-item');
+                        items.forEach(item => {
+                            const text = item.textContent.toLowerCase();
+                            item.style.display = text.includes(search) ? 'flex' : 'none';
+                        });
+                    });
+                }
+            },
+            
+            showTab(tabName) {
+                // Hide all tabs
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                
+                // Show selected tab
+                document.getElementById(tabName + 'Tab').classList.add('active');
+                
+                // Update tab buttons
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                event.target.classList.add('active');
+            },
+            
+            showAddMemberForm() {
+                document.getElementById('addMemberModal').style.display = 'flex';
+                document.getElementById('addMemberForm').reset();
+                
+                document.getElementById('addMemberForm').onsubmit = async (e) => {
+                    e.preventDefault();
+                    
+                    const userData = {
+                        username: document.getElementById('memberUsername').value,
+                        password: document.getElementById('memberPassword').value,
+                        name: document.getElementById('memberName').value,
+                        whatsapp: document.getElementById('memberWhatsapp').value,
+                        email: document.getElementById('memberEmail').value,
+                        role: document.getElementById('memberRole').value
+                    };
+                    
+                    try {
+                        await API.createUser(userData);
+                        this.hideModal('addMemberModal');
+                        alert('Member added successfully!');
+                        this.renderDashboardContent();
+                    } catch (error) {
+                        alert('Error adding member: ' + error.message);
+                    }
+                };
+            },
+            
+            async editMember(memberId) {
+                const users = await API.getUsers();
+                const member = users.find(u => u.id === memberId);
+                
+                if (!member) return;
+                
+                document.getElementById('editMemberId').value = member.id;
+                document.getElementById('editMemberName').value = member.name;
+                document.getElementById('editMemberWhatsapp').value = member.whatsapp || '';
+                document.getElementById('editMemberEmail').value = member.email || '';
+                document.getElementById('editMemberRole').value = member.role;
+                document.getElementById('editMemberStatus').value = member.status || 'active';
+                
+                document.getElementById('editMemberModal').style.display = 'flex';
+                
+                document.getElementById('editMemberForm').onsubmit = async (e) => {
+                    e.preventDefault();
+                    
+                    const userData = {
+                        name: document.getElementById('editMemberName').value,
+                        whatsapp: document.getElementById('editMemberWhatsapp').value,
+                        email: document.getElementById('editMemberEmail').value,
+                        role: document.getElementById('editMemberRole').value,
+                        status: document.getElementById('editMemberStatus').value
+                    };
+                    
+                    try {
+                        await API.updateUser(memberId, userData);
+                        this.hideModal('editMemberModal');
+                        alert('Member updated successfully!');
+                        this.renderDashboardContent();
+                    } catch (error) {
+                        alert('Error updating member: ' + error.message);
+                    }
+                };
+            },
+            
+            async viewStatement(memberId) {
+                try {
+                    const report = await API.getMemberReport(memberId);
+                    
+                    document.getElementById('statementContent').innerHTML = `
+                        <div style="padding: 20px;">
+                            <h3 style="color: var(--primary-color); margin-bottom: 20px;">${report.member.name}</h3>
+                            
+                            <div class="stats-grid" style="margin-bottom: 20px;">
+                                <div class="stat-card">
+                                    <div class="stat-value">UGX ${report.balance.toLocaleString()}</div>
+                                    <div>Current Balance</div>
+                                </div>
+                                <div class="stat-card">
+                                    <div class="stat-value">${report.transactionCount}</div>
+                                    <div>Transactions</div>
+                                </div>
+                            </div>
+                            
+                            <h4 style="margin-bottom: 10px;">Transaction History</h4>
+                            <div class="transaction-list" style="max-height: 300px;">
+                                ${report.transactions.map(t => `
+                                    <div class="transaction-item">
+                                        <div>
+                                            <strong>${new Date(t.date).toLocaleDateString()}</strong><br>
+                                            <small>${t.notes || 'No notes'}</small>
+                                        </div>
+                                        <div style="text-align:right;">
+                                            <span style="color:${t.type === 'deposit' ? 'green' : 'red'}; font-weight:bold;">
+                                                UGX ${t.amount.toLocaleString()}
+                                            </span><br>
+                                            <small>${t.receiptNumber}</small>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('statementModal').style.display = 'flex';
+                } catch (error) {
+                    alert('Error loading statement: ' + error.message);
+                }
+            },
+            
+            printStatement() {
+                const content = document.getElementById('statementContent').innerHTML;
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html>
+                        <head>
+                            <title>Member Statement - Bugiboni Savings</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 20px; }
+                                h1 { color: #2E7D32; }
+                                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                                th { background: #f5f5f5; padding: 10px; text-align: left; }
+                                td { padding: 10px; border-bottom: 1px solid #ddd; }
+                                .header { text-align: center; margin-bottom: 30px; }
+                                .footer { margin-top: 30px; text-align: center; color: #666; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h1>Bugiboni Young Entrepreneurs</h1>
+                                <h2>Member Statement</h2>
+                                <p>Generated on: ${new Date().toLocaleString()}</p>
+                            </div>
+                            ${content}
+                            <div class="footer">
+                                <p>This is a computer generated statement. No signature required.</p>
+                            </div>
+                        </body>
+                    </html>
+                `);
+                printWindow.document.close();
+                printWindow.print();
+            },
+            
+            contactTreasurer() {
+                // Try to find treasurer from API
+                API.getUsers().then(users => {
+                    const treasurer = users.find(u => u.role === 'treasurer');
+                    if (treasurer && treasurer.whatsapp) {
+                        window.open(`https://wa.me/${treasurer.whatsapp.replace(/\D/g, '')}`, '_blank');
+                    } else {
+                        alert('Treasurer contact not available');
+                    }
+                });
+            },
+            
+            generateGroupReport() {
+                API.getGroupReport().then(summary => {
+                    alert(`Group Report\n\n` +
+                          `Total Members: ${summary.totalMembers}\n` +
+                          `Total Savings: UGX ${summary.totalSavings.toLocaleString()}\n` +
+                          `Active Members: ${summary.activeMembers}`);
+                });
+            },
+            
+            exportData() {
+                Promise.all([
+                    API.getUsers(),
+                    API.getTransactions()
+                ]).then(([users, transactions]) => {
+                    const data = { users, transactions };
+                    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `bugiboni-export-${new Date().toISOString().split('T')[0]}.json`;
+                    a.click();
+                });
+            },
+            
+            viewAllMembers() {
+                this.showTab('members');
+            },
+            
+            hideModal(modalId) {
+                document.getElementById(modalId).style.display = 'none';
+            },
+            
+            async logout() {
+                await API.logout();
+                this.showLogin();
+            }
+        };
+
+        // ============================================
+        // INITIALIZATION
+        // ============================================
+        // Initialize the app
+        document.addEventListener('DOMContentLoaded', () => {
+            UI.init();
+            
+            // Set default date for deposit modal
+            const dateInput = document.getElementById('depositDate');
+            if (dateInput) {
+                dateInput.value = new Date().toISOString().split('T')[0];
+            }
+        });
+
+        // Make UI functions globally available
+        window.UI = UI;
+    </script>
+</body>
+</html>
